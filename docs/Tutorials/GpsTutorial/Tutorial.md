@@ -1,5 +1,7 @@
 # F´ GPS Tutorial
 
+**WARNING:** this tutorial is under revision for use with F´ 2.0.0.
+
 In this guide, we will cover the basics of working with F´ by attaching a GPS receiver to a serial driver and running
 the application on a Raspberry PI. In order to fully benefit from this tutorial, the user should acquire any NMEA
 compatible UART GPS receiver and a raspberry pi.  In this tutorial, we use a NMEA GPS receiver with micro-USB such that
@@ -21,6 +23,9 @@ for use as a demo or to help debug issues that come up when going through the tu
 
 ## Prerequisites
 
+This tutorial assumes the user has gone through and understood [Getting Started Tutorial](../GettingStarted/Tutorial.md)
+and [MathComponent Tutorial](../MathComponent/Tutorial.md)
+
 This tutorial requires the user to have some basic software skills and have installed F´. The prerequisite skills to
 understand this tutorial are as follows:
 
@@ -36,7 +41,7 @@ tools.
 
 ## Creating a Custom F´ Component
 
-In this next section we will create a custom F´ component for reading GPS data off a UART based GPS module. It will 
+In this next section we will create a custom F´ component for reading GPS data off a UART based GPS module. It will
 receive data from a UART read port, process the data, and report telemetry from that data. We will then finish up by
 adding an event to report GPS lock status when it changes and a command to report lock status on demand.
 
@@ -87,7 +92,6 @@ invoke other components to send data buffers, events, telemetry, etc.
 The `GpsComponentAi.xml` file in the `Gps` subdirectory should look like:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../Autocoders/schema/ISF/component_schema.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <!-- GPS Tutorial: GpsComponentAi.xml
 
 This is the design of GPS component. The goal is to read GPS messages from a UART port, and produce Events, and
@@ -170,7 +174,6 @@ command will trigger code to emit an event, which will report if the GPS has "lo
 the `Gps` subdirectory should look like the following:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="file:../xml/ISF_Component_Schema.rnc" type="compact"?>
 <!-- GPS Tutorial: GpsApp/Gps/Commands.xml
 
 This defines a single command to report the lock status of the GPS. This demonstrates a simple command that is useful
@@ -196,7 +199,6 @@ events, GPS locked and GPS lock lost. The `Events.xml` file in the `Gps` subdire
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="file:../xml/ISF_Component_Schema.rnc" type="compact"?>
 <!-- GPS Tutorial: GpsApp/Gps/Events.xml
 
 This defines two events, one at activity hi level to report that lock has been acquired, and one at warning hi level to
@@ -222,7 +224,6 @@ GPS units and are the heart of our application. Our `Telemetry.xml` file in the 
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="file:../xml/ISF_Component_Schema.rnc" type="compact"?>
 <!-- GPS Tutorial: GpsApp/Gps/Telemetry.xml
 
 This defines four telemetry channels to report basic GPS information.
@@ -389,7 +390,7 @@ what has been generated. The critical sections for our implementation are in `Gp
  51   // ----------------------------------------------------------------------
  52   // Handler implementations for user-defined typed input ports
  53   // ----------------------------------------------------------------------
- 54 
+ 54
  55   void GpsComponentImpl ::
  56     serialRecv_handler(
  57         const NATIVE_INT_TYPE portNum,
@@ -399,11 +400,11 @@ what has been generated. The critical sections for our implementation are in `Gp
  61   {
  62     // TODO
  63   }
- 64 
+ 64
  65   // ----------------------------------------------------------------------
  66   // Command handler implementations
  67   // ----------------------------------------------------------------------
- 68 
+ 68
  69   void GpsComponentImpl ::
  70     Gps_ReportLockStatus_cmdHandler(
  71         const FwOpcodeType opCode,
@@ -502,8 +503,8 @@ namespace GpsApp {
   {
       for (NATIVE_INT_TYPE buffer = 0; buffer < NUM_UART_BUFFERS; buffer++) {
           //Assign the raw data to the buffer. Make sure to include the side of the region assigned.
-          this->m_recvBuffers[buffer].setdata((U64)this->m_uartBuffers[buffer]);
-          this->m_recvBuffers[buffer].setsize(UART_READ_BUFF_SIZE);
+          this->m_recvBuffers[buffer].setData((U64)this->m_uartBuffers[buffer]);
+          this->m_recvBuffers[buffer].setSize(UART_READ_BUFF_SIZE);
           // Invoke the port to send the buffer out.
           this->serialBufferOut_out(0, this->m_recvBuffers[buffer]);
       }
@@ -535,8 +536,8 @@ namespace GpsApp {
       float lat = 0.0f, lon = 0.0f;
       GpsPacket packet;
       // Grab the size (used amount of the buffer) and a pointer to the data in the buffer
-      U32 buffsize = static_cast<U32>(serBuffer.getsize());
-      char* pointer = reinterpret_cast<char*>(serBuffer.getdata());
+      U32 buffsize = static_cast<U32>(serBuffer.getSize());
+      char* pointer = reinterpret_cast<char*>(serBuffer.getData());
       // Check for invalid read status, log an error, return buffer and abort if there is a problem
       if (serial_status != Drv::SER_OK) {
           Fw::Logger::logMsg("[WARNING] Received buffer with bad packet: %d\n", serial_status);
@@ -649,7 +650,7 @@ namespace GpsApp {
 ```
 ### GpsApp/Gps/GpsComponentImpl.hpp (Sample)
 ```hpp
-// ====================================================================== 
+// ======================================================================
 // \title  GpsComponentImpl.hpp
 // \author lemstarch
 // \brief  hpp header file for the sample F' GPS component, based on a
@@ -657,7 +658,7 @@ namespace GpsApp {
 //
 // \copyright
 // Copyright 2018, lestarch
-// ====================================================================== 
+// ======================================================================
 
 #ifndef GpsComponentImpl_HPP
 #define GpsComponentImpl_HPP
@@ -737,7 +738,7 @@ namespace GpsApp {
     PRIVATE:
 
       // ----------------------------------------------------------------------
-      // Command handler implementations 
+      // Command handler implementations
       // ----------------------------------------------------------------------
 
       //! Implementation for Gps_ReportLockStatus command handler
@@ -789,7 +790,7 @@ We'll then integrate it into a new topology.
 fprime-util build
 ```
 
-We are now ready to make a Topology for this application, and test it! 
+We are now ready to make a Topology for this application, and test it!
 
 ## Topology
 
@@ -865,7 +866,7 @@ in case the user prefers a direct checkout of working code.  The files are linke
 We will also need to update the `CMakeLists.txt` in the `Top` directory to change the name of "RefTopologyAppAi.xml" to
 "GpsTopologyAppAi.xml".
 
-Once these files have been added to the *GpsApp/Top* folder, we have a complete project. The project can be built 
+Once these files have been added to the *GpsApp/Top* folder, we have a complete project. The project can be built
 by changing directory to the deployment directory, issuing our build commands and then running the executable.
 
 ## Running the Executable On the Native Host with the Ground System
@@ -949,7 +950,7 @@ on the RPI 2 as well.
 The first step is to follow the installation of the tools for the RPI cross compile as documented here:
 [RPI Deployment README.md](../../../RPI/README.md).
 
-In order to cross-compile for the a specific architecture, the user needs to generate a new build directory using a 
+In order to cross-compile for the a specific architecture, the user needs to generate a new build directory using a
 toolchain file for that architecture. F´ includes a toolchain for the raspberry PI, assuming the tools are installed in
 the manner described in the above readme.  This toolchain is called "raspberrypi". The build can be generated by running
 the following commands in the `GpsApp` directory:
@@ -963,7 +964,7 @@ This will generate the binary at `GpsApp/bin/arm-linux-gnueabihf/GpsApp`. The us
 before. Ensure that the system and network firewall allow through port 50000 from the PI to the host, and then run:
 
 ```shell
-fprime-gds -d . -n
+fprime-gds -n
 ```
 
 Assuming there is no firewall or other network limits between the PI and the host, the user can run the following from a

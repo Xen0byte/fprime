@@ -11,7 +11,7 @@ command of any command sequencer instance defined in the flight system.
 
 F´ sequence files consist of lists of commands. These commands start with a time argument, followed by the command
 mnemonic, and lastly any arguments to command.  See the example below, which are all pulled from the example sequence
-file found here: [simple_sequence.seq](https://github.com/nasa/fprime/blob/devel/Gds/examples/simple_sequence.seq).
+file found here: [simple_sequence.seq](https://github.com/fprime-community/fprime-gds/blob/devel/examples/simple_sequence.seq).
 
 ```
 A2015-075T22:32:40.123 cmdDisp.CMD_NO_OP
@@ -37,7 +37,7 @@ Below is an example on how to run the sample example sequence with the Ref dicti
 dictionary will not be generated.
 
 ```
-fprime-seqgen fprime/Gds/examples/simple_sequence.seq -d fprime/Ref/build-artifacts/*/dict/RefTopologyAppDictionary.xml 
+fprime-seqgen fprime/Gds/examples/simple_sequence.seq -d fprime/Ref/build-artifacts/*/dict/RefTopologyAppDictionary.xml
 ```
 
 Here the output file is not specified, so it will be a new file in the same directory as the sequence but ending with
@@ -56,7 +56,7 @@ application.
 cmdSeq.CS_RUN	"/tmp/sample_sequence.bin"
 ```
 
-**Note:** the sample sequence will run for multiple hours due to the specification of the relative commands. 
+**Note:** the sample sequence will run for multiple hours due to the specification of the relative commands.
 
 ## Time Details
 

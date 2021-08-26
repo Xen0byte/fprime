@@ -74,6 +74,10 @@
 #define FwPrmIdType U32                     //!< Type representation for a parameter id
 #endif
 
+#ifndef FwTlmPacketizeIdType
+#define FwTlmPacketizeIdType U16            //!< Packetized telemetry packet id
+#endif
+
 // How big the size of a buffer (or string) representation is
 #ifndef FwBuffSizeType
 #define FwBuffSizeType U16                  //!< Type representation for storing a buffer or string size
@@ -158,7 +162,7 @@
 // Turn asserts on or off
 
 #define FW_NO_ASSERT                        1   //!< Asserts turned off
-#define FW_FILEID_ASSERT                    2   //!< File ID used - requires -DASSERT_FILE_ID=<somevalue> to be set on the compile command line
+#define FW_FILEID_ASSERT                    2   //!< File ID used - requires -DASSERT_FILE_ID=somevalue to be set on the compile command line
 #define FW_FILENAME_ASSERT                  3   //!< Uses the file name in the assert - image stores filenames
 
 #ifndef FW_ASSERT_LEVEL

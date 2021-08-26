@@ -6,7 +6,7 @@ descriptions of module-level functions. Options describes the runtime options th
 takes. Users wanting to alter the build should look here.
 
 - [Options](../api/cmake/Options.md): Runtime build options
-- [API](../api/cmake/API.md): Module API function documentation 
+- [API](../api/cmake/API.md): Module API function documentation
 
 ## Toolchain and Platform Documentation
 
@@ -24,9 +24,7 @@ define types and headers needed for F´ for any embedded system they desire.
 [Platform Template](../api/cmake/platform/platform-template.md): Platform file template documentation
 [Linux](../api/cmake/platform/Linux.md): Linux platform support
 [Darwin](../api/cmake/platform/Darwin.md): Darwin (macOS) platform support
-[arm-linux-gnueabihf](../api/cmake/platform/arm-linux-gnueabihf.md): Raspberry PI platform support
 [rtems5](../api/cmake/platform/rtems5.md): RTEMS 5 initial support
-[Linux-common](./platform/Linux-common.md): Common Linux platform support included above
 [CMakeLists.txt](./platform/CMakeLists.txt.md)
 
 ## Target Documentation
@@ -51,7 +49,7 @@ improvements to the CMake are needed. Build system architects should consult thi
 
 [FPrime Code](../api/cmake/FPrime-Code.md): F´ framework code inclusions
 [FPrime](../api/cmake/FPrime.md): F´ project support
-[Module](../api/cmake/support/Module.md): Module registry and autocode support 
+[Module](../api/cmake/support/Module.md): Module registry and autocode support
 [Executable](../api/cmake/support/Executable.md): Executable registry and autocoding support
 [Unit Test](../api/cmake/support/Unit_Test.md): Unit test registry and autocode support
 [Utils](../api/cmake/support/Utils.md): General utility functions

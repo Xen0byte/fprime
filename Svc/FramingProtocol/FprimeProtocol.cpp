@@ -32,17 +32,27 @@ void FprimeFraming::frame(const U8* const data, const U32 size, Fw::ComPacket::C
     Utils::HashBuffer hash;
 
     // Serialize data
-    serializer.serialize(START_WORD);
-    serializer.serialize(real_data_size);
+    Fw::SerializeStatus status;
+    status = serializer.serialize(START_WORD);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    
+    status = serializer.serialize(real_data_size);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
     // Serialize packet type if supplied, otherwise it *must* be present in the data
     if (packet_type != Fw::ComPacket::FW_PACKET_UNKNOWN) {
-        serializer.serialize(static_cast<I32>(packet_type)); // I32 used for enum storage
+        status = serializer.serialize(static_cast<I32>(packet_type)); // I32 used for enum storage
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
     }
-    serializer.serialize(data, size, true);  // Serialize without length
+    
+    status = serializer.serialize(data, size, true);  // Serialize without length
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
 
     // Calculate and add transmission hash
     Utils::Hash::hash(buffer.getData(), total - HASH_DIGEST_LENGTH, hash);
-    serializer.serialize(hash.getBuffAddr(), HASH_DIGEST_LENGTH, true);
+    status = serializer.serialize(hash.getBuffAddr(), HASH_DIGEST_LENGTH, true);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
     buffer.setSize(total);
 
     m_interface->send(buffer);
@@ -99,6 +109,10 @@ DeframingProtocol::DeframingStatus FprimeDeframing::deframe(Types::CircularBuffe
         return DeframingProtocol::DEFRAMING_INVALID_CHECKSUM;
     }
     Fw::Buffer buffer = m_interface->allocate(size);
+    // some allocators may return buffers larger than requested
+    // that causes issues in routing. adjust size
+    FW_ASSERT(buffer.getSize() >= size);
+    buffer.setSize(size);
     ring.peek(buffer.getData(), size, FP_FRAME_HEADER_SIZE);
     m_interface->route(buffer);
     return DeframingProtocol::DEFRAMING_STATUS_SUCCESS;

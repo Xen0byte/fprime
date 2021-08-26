@@ -19,7 +19,7 @@
     #include <stdio.h> // snprintf
     #ifdef BUILD_UT
         #include <iostream>
-        #include <Fw/Types/EightyCharString.hpp>
+        #include <Fw/Types/String.hpp>
     #endif
 #endif
 
@@ -109,7 +109,7 @@ public:
     //! deserializes the pointer to said data, the size, and context. This is done for efficiency in moving around data,
     //! and is the primary usage of Fw::Buffer. To deserialize the wrapped data, use either the data pointer accessor
     //! or the serialize buffer base representation and deserialize from that.
-    //! \param serialBuffer: serialize buffer to read data into
+    //! \param buffer: serialize buffer to read data into
     //! \return: status of serialization
     Fw::SerializeStatus deserialize(Fw::SerializeBufferBase& buffer);
 
@@ -161,7 +161,7 @@ public:
 
 PRIVATE:
     Fw::ExternalSerializeBuffer m_serialize_repr; //<! Representation for serialization and deserialization functions
-    U8* m_data; //<! data - A pointer to the data
+    U8* m_bufferData; //<! data - A pointer to the data
     U32 m_size; //<! size - The data size in bytes
     U32 m_context; //!< Creation context for disposal
 

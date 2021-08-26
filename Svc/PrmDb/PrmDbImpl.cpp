@@ -7,7 +7,6 @@
 
 #include <Svc/PrmDb/PrmDbImpl.hpp>
 #include <Fw/Types/Assert.hpp>
-#include <Fw/Types/EightyCharString.hpp>
 
 #include <Os/File.hpp>
 
@@ -281,7 +280,7 @@ namespace Svc {
                 return;
             }
 
-            U32 recordSize;
+            U32 recordSize = 0;
             // read record size
             readSize = sizeof(recordSize);
 
